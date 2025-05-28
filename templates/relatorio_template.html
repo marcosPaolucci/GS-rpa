@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Focos de Incêndio</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1, h2 { color: #333; }
+        img { max-width: 700px; margin-bottom: 20px; border: 1px solid #ccc; }
+        table.dataTable { width: 100% !important; }
+    </style>
+</head>
+<body>
+
+    <h1>Relatório de Focos de Incêndio</h1>
+    <p>Este relatório apresenta uma análise consolidada dos focos de incêndio registrados nos últimos dias.</p>
+
+    <h2>Resumo por Estado (Ordenado por nº de focos)</h2>
+    <ul>
+        {% for estado, total in resumo.focos_por_estado.items() %}
+            <li><strong>{{ estado }}</strong>: {{ total }} focos</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Gráficos de Ocorrência</h2>
+    {% for grafico in graficos %}
+        <img src="../{{ grafico }}" alt="Gráfico"><br>
+    {% endfor %}
+
+    <h2>Alertas Críticos (Atende todos os critérios: risco alto, FRP alto e estiagem prolongada)</h2>
+    {% if alertas.empty %}
+        <p><em>Sem alertas críticos encontrados para o período analisado.</em></p>
+    {% else %}
+        <p><strong>{{ alertas.shape[0] }}</strong> alertas críticos encontrados.</p>
+
+        <table id="tabela_alertas" class="display">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Estado</th>
+                    <th>Município</th>
+                    <th>Risco Fogo</th>
+                    <th>FRP</th>
+                    <th>Dias Sem Chuva</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for _, row in alertas.iterrows() %}
+                <tr>
+                    <td>{{ row['data_coleta'] }}</td>
+                    <td>{{ row['estado'] }}</td>
+                    <td>{{ row['municipio'] }}</td>
+                    <td>{{ "%.2f"|format(row['risco_fogo']) }}</td>
+                    <td>{{ "%.1f"|format(row['frp']) }}</td>
+                    <td>{{ row['numero_dias_sem_chuva'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tabela_alertas').DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                },
+                order: [[4, "desc"]]  // Ordena inicialmente por FRP (coluna 5)
+            });
+        });
+    </script>
+
+</body>
+</html>
