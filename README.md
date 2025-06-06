@@ -72,6 +72,17 @@ Abra o HTML no navegador para visualizar.
   - ≥ 10 dias sem chuva
 - 📑 Relatório em HTML com resumo por estado e tabela interativa dos alertas
 
-## ✍️ Autor
+## ✍️ Autores
 
-Este projeto foi desenvolvido como parte de um trabalho prático sobre monitoramento ambiental e geração automatizada de relatórios com Python.
+- **Nickolas Ferraz**  
+  RM: 558458
+
+- **Marcos Paolucci**  
+  RM: 554941
+
+- **Sandron Oliveira**  
+  RM: 557172
+
+
+
+
